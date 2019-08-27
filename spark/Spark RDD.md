@@ -45,4 +45,54 @@ RDD支持两种类型的操作：transformation和action。
 
 transformation:Spark的所有transformation操作都是lazy的。只有当action操作触发时，才会计算transformation的内容。
 action：触发Spark计算任务的操作。
+## Transformation
+- map(func)
+- filter(func)
+- flatMap(func)
+- mapPartitions(func)
+- mapPartitionsWithIndex(func)
+- sample(withReplacement, fraction, seed)
+- union(otherDataset)
+- intersection(otherDataset)
+- distinct([numPartitions]))
+- groupByKey([numPartitions])
+- reduceByKey(func, [numPartitions])
+- aggregateByKey(zeroValue)(seqOp, combOp, [numPartitions])
+- sortByKey([ascending], [numPartitions])
+- join(otherDataset, [numPartitions])
+- cogroup(otherDataset, [numPartitions])
+- cartesian(otherDataset)
+- pipe(command, [envVars])
+- coalesce(numPartitions)
+- repartition(numPartitions)
+- repartitionAndSortWithinPartitions(partitioner)
 
+## Actions
+- reduce(func)
+- collect()
+- count()
+- first()
+- take(n)
+- takeSample(withReplacement, num, [seed])
+- takeOrdered(n, [ordering])
+- saveAsTextFile(path)
+- saveAsSequenceFile(path) 
+- saveAsObjectFile(path) 
+- countByKey()
+- foreach(func)
+
+## 理解闭包
+什么叫闭包：跨作用域访问函数变量。又指一个拥有许多变量和绑定了这些变量的函数表达式（通常是一个函数），因而这些变量也是该表达式的一部分。
+
+在Spark中，如下示例：
+```
+scala> val rdd = sc.parallelize(List(1,2,3))
+scala> var counter =0
+scala> rdd.foreach(x=>counter+x)
+scala> print(counter)
+0
+```
+最终结果显示为0，与我们预期的不一样。
+
+对于以上变量counter，由于在main函数和在rdd对象的foreach函数是属于不同的闭包，所以，传进foreach的counter是一个副本，初始值为0。在foreach函数中是副本的叠加，不管副本如何变化，都不会影响到main函数中的counter，因此，最终结果为0。
+为了确保这种场景的成功，在Spark中应该使用累加器（Accumulator）。
