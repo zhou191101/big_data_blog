@@ -3,7 +3,7 @@
 
 # Spark
 ## 基础
-1. [Spark RDD](https://github.com/zhou191101/big_data_blog/blob/master/spark/Spark%20RDD.md)
+1. [Spark RDD](https://zhou191101.github.io/2019/09/01/bigdata-sparkrdd/)
 2. Spark DataFrame && DataSet
 3. Spark Streaming
 4. Spark Structed Streaming
